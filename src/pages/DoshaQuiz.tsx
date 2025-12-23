@@ -266,20 +266,22 @@ const DoshaQuiz = () => {
   const question = quizQuestions[currentQuestion];
   const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
 
-  const handleAnswer = (dosha: string) => {
+  const handleAnswer = (optionId: string) => {
     setAnswers(prev => {
       const currentSelections = prev[currentQuestion] || [];
 
-      const updatedSelections = currentSelections.includes(dosha)
-        ? currentSelections.filter(d => d !== dosha)
-        : [...currentSelections, dosha];
+      const updatedSelections = currentSelections.includes(optionId)
+        ? currentSelections.filter(id => id !== optionId) // deselect
+        : [...currentSelections, optionId];               // select
 
       return {
         ...prev,
-        [currentQuestion]: updatedSelections
+        [currentQuestion]: updatedSelections,
       };
     });
   };
+
+
 
   const handleNext = () => {
     if (currentQuestion < quizQuestions.length - 1) {
@@ -287,11 +289,19 @@ const DoshaQuiz = () => {
     } else {
       // Calculate dominant dosha
       const doshaCount = { vata: 0, pitta: 0, kapha: 0 };
-      Object.values(answers).forEach((doshaArray) => {
-        doshaArray.forEach((dosha) => {
-          doshaCount[dosha as keyof typeof doshaCount]++;
+
+        Object.values(answers).forEach(optionIds => {
+          optionIds.forEach(optionId => {
+            const option = quizQuestions
+              .flatMap(q => q.options)
+              .find(o => o.id === optionId);
+
+            if (option) {
+              doshaCount[option.dosha]++;
+            }
+          });
         });
-      });
+
 
       
       const dominantDosha = Object.entries(doshaCount).reduce((a, b) =>
@@ -365,15 +375,15 @@ const DoshaQuiz = () => {
                 <motion.button
                   key={option.id}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => handleAnswer(option.dosha)}
+                  onClick={() => handleAnswer(option.id)}
                   className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                    answers[currentQuestion]?.includes(option.dosha)
+                    answers[currentQuestion]?.includes(option.id)
                       ? "border-primary bg-primary/10"
                       : "border-border bg-card hover:border-primary/50"
                   }`}
                 >
                   <span className={`text-sm ${
-                    answers[currentQuestion]?.includes(option.dosha)
+                    answers[currentQuestion]?.includes(option.id)
                       ? "text-primary font-medium"
                       : "text-foreground"
                   }`}>

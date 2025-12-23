@@ -101,7 +101,7 @@ const DoshaResult = () => {
           transition={{ delay: 0.8 }}
           className="mt-8"
         >
-          <h3 className="text-sm font-medium text-foreground mb-3">Your Natural Strengths</h3>
+          <h3 className="text-base font-semibold text-foreground mb-3">Your Natural Strengths</h3>
           <div className="flex flex-wrap gap-2">
             {details.qualities.map((quality, index) => (
               <motion.span
@@ -124,7 +124,7 @@ const DoshaResult = () => {
           transition={{ delay: 1 }}
           className="mt-8"
         >
-          <h3 className="text-sm font-medium text-foreground mb-2 text-center">
+          <h3 className="text-base font-display font-semibold text-foreground mb-2 text-center">
             Dosha Scores
           </h3>
           <div className="overflow-x-auto">
